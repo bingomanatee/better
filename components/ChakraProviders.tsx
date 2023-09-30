@@ -72,13 +72,13 @@ const theme = extendTheme({
     'a-won': {
       p:0,
       color: 'a-won',
-      fontSize: '1.1em',
+      fontSize: 'lg',
       fontWeight: 'bold'
     },
     'b-won': {
       p:0,
       color: 'b-won',
-      fontSize: '1.1em',
+      fontSize: 'lg',
       fontWeight: 'bold'
     },
     'feature-description': {
@@ -113,7 +113,7 @@ const theme = extendTheme({
         borderRadius: '0.333em',
         lineHeight: '100%',
         _hover: {
-          fontWeight: 500
+          shadow: 'dark-lg'
         }
       },
 

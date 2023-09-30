@@ -59,8 +59,8 @@ const CompareRow = memo(function CompreRowBase({ comp, a, b }: { comp: Compariso
 })
 
 export default function Page() {
-  const [a, setA] = useState('apples');
-  const [b, setB] = useState('oranges');
+  const [a, setA] = useState('');
+  const [b, setB] = useState('');
 
   const [comparisons, setComparisons] = useState<Comparison[]>([]);
   const [isLoading, setIsLoading] = useState(false)
@@ -75,7 +75,6 @@ export default function Page() {
   }, [setA, setB, setIsLoading, setLoaded])
 
   const onSubmit = async (e: any) => {
-    console.log('submitting', a, b);
     setIsLoading(true);
 
     e.preventDefault();
@@ -151,9 +150,9 @@ export default function Page() {
   const difference = diff(pointsForA, pointsForB);
   return (
     <Box>
-      <Box as="main" p={20}>
+      <Box as="main" p={5}>
         <Heading>
-          Which is better
+          Ask OpenAI: Which is better
         </Heading>
         <Text size="lg" fontSize="lg" my={6}>
           Compare two things! enter two items to compare their worth -- such as "Apples" and "Oranges",
@@ -168,6 +167,7 @@ export default function Page() {
               <Input type="text"
                      disabled={isLoading || loaded}
                      value={a}
+                     placeholder="ex: 'apples', 'Honda Fit', 'David Lee Roth'"
                      onChange={(e) => setA(e.target.value)}
               />
             </InputGroup>
@@ -175,15 +175,16 @@ export default function Page() {
               <InputLeftAddon>Second Item("B")</InputLeftAddon>
               <Input type="text"
                      value={b}
+                     placeholder="ex: 'oranges', 'Tesla Roadster', 'Jimi Hendrix'"
                      disabled={isLoading || loaded}
                      onChange={(e) => setB(e.target.value)}
               />
             </InputGroup>
             <Box flex={0}>
-              <Button disabled={isLoading} colorScheme="green"
+              <Button disabled={(isLoading) || (!(a && b))} colorScheme="green"
                       type="submit"
               >
-                Compare the things &rarr;
+                Compare &rarr;
               </Button>
             </Box>
           </HStack>
