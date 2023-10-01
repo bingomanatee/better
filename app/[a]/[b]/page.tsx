@@ -66,7 +66,8 @@ const reset = () => {
 
 
 export default function Page({ params }: {params: {a: string, b: string}}) {
-  const { a, b } = params;
+  const a = decodeURIComponent(params.a);
+  const b = decodeURIComponent(params.b);
 
   const [comparisons, setComparisons] = useState<Comparison[]>([]);
   const [isLoading, setIsLoading] = useState(false)
