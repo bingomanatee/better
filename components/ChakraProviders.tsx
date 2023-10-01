@@ -65,6 +65,11 @@ const theme = extendTheme({
       fontSize: 'lg',
       fontWeight: 'bold'
     },
+    'overall-sm': {
+      color: 'whiteAlpha.700',
+      fontSize: 'md',
+      fontWeight: 'bold'
+    },
     'feature-item': {
       fontSize: 'lg',
       p:0,

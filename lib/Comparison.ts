@@ -54,4 +54,23 @@ export default class Comparison {
     return this.bName;
   }
 
+  getComp(side: string) {
+    if (side === 'a') {
+      return this.a;
+    }
+    if (side === 'b') {
+      return this.b;
+    }
+    return '';
+  }
+
+  getWon(side: string) {
+    if (side === 'a') {
+      return this.aWon;
+    }
+    if (side === 'b') {
+      return this.bWon;
+    }
+    return false;
+  }
 }

@@ -1,6 +1,6 @@
 'use client';
 import YAML from 'yaml'
-import { Fragment, useCallback, useMemo, memo, useState, useEffect } from 'react';
+import { Fragment, useCallback, useMemo, memo, useState, useEffect, ChangeEventHandler, ChangeEvent } from 'react';
 
 import {
   Box,
@@ -13,6 +13,7 @@ import {
   Text
 } from '@chakra-ui/react'
 import Comparison from '~/lib/Comparison'
+import InputForm from '~/components/InputForm'
 
 const decoder = new TextDecoder();
 
@@ -28,17 +29,12 @@ export default function Page() {
   const [a, setA] = useState('');
   const [b, setB] = useState('');
 
-  const [comparisons, setComparisons] = useState<Comparison[]>([]);
-  const [isLoading, setIsLoading] = useState(false)
-  const [loaded, setLoaded] = useState(false);
-
-  const reset = useCallback(() => {
-    setA('');
-    setB('');
-    setIsLoading(false);
-    setLoaded(false);
-    setComparisons([])
-  }, [setA, setB, setIsLoading, setLoaded])
+  const aOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setA(e.target?.value ?? '');
+  }, [setA]);
+  const bOnChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setB(e.target?.value ?? '');
+  }, [setB]);
 
   return (
     <Box>
@@ -50,39 +46,12 @@ export default function Page() {
           Compare two things! enter two items to compare their worth -- such as "Apples" and "Oranges",
           "Tesla Roadster" and "Honda Fit"
         </Text>
-        <form action={['',encodeURIComponent(a),encodeURIComponent(b)].join('/')}>
-          <HStack my={4}>
-            <InputGroup>
-              <InputLeftAddon>
-                First Item("A")
-              </InputLeftAddon>
-              <Input type="text"
-                     disabled={isLoading || loaded}
-                     value={a}
-                     placeholder="ex: 'apples', 'Honda Fit', 'David Lee Roth'"
-                     onChange={(e) => setA(e.target.value)}
-              />
-            </InputGroup>
-            <InputGroup>
-              <InputLeftAddon>Second Item("B")</InputLeftAddon>
-              <Input type="text"
-                     value={b}
-                     placeholder="ex: 'oranges', 'Tesla Roadster', 'Jimi Hendrix'"
-                     disabled={isLoading || loaded}
-                     onChange={(e) => setB(e.target.value)}
-              />
-            </InputGroup>
-            <Box flex={0}>
-              <Button disabled={(isLoading) || (!(a && b))} colorScheme="green"
-                      type="submit"
-              >
-                Compare &rarr;
-              </Button>
-            </Box>
-          </HStack>
-
-
-        </form>
+        <InputForm a={a}
+                   b={b}
+                   aOnChange={aOnChange}
+                   bOnChange={bOnChange}
+                   action={['',encodeURIComponent(a),encodeURIComponent(b)].join('/')}
+                   label={<span>  Compare &rarr;</span>} />
       </Box>
     </Box>
   )
