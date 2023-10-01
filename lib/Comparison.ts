@@ -1,5 +1,13 @@
 import { type, TypeEnum } from '@wonderlandlabs/walrus'
 
+export type ComparisonProps = {
+   feature: string;
+   description: string;
+   value: number;
+   b: string;
+   a: string;
+   winner: string
+}
 
 export default class Comparison {
   public feature: string;
@@ -9,7 +17,7 @@ export default class Comparison {
   public a: string;
   public winner: string
 
-  constructor(data: any, public aName: string, public bName: string) {
+  constructor(data: ComparisonProps, public aName: string, public bName: string) {
     if (type.describe(data, true) !== TypeEnum.object) {
       throw new Error('bad input to Choice');
     }
