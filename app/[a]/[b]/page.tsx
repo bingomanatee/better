@@ -118,7 +118,18 @@ export default function Page({ params }: {params: {a: string, b: string}}) {
     }
     let yml = '';
 
-    function parseYml() {
+    function parseYml(final) {
+      if (final && !comparisons.length) {
+        console.log('--- attempting to parse problematic content:', yml);
+        let oldYml = yml;
+        let lines = yml.split(/[\n\r]/g);
+        let start = lines.findIndex((string) =>/^```/.test(string));
+        if(start > -1) {
+          const end = lines.slice(start + 1).findIndex((string) => /```$/.test(string)) + start;
+          yml = lines.slice(start + 1, end + 1).join("\n");
+          console.log('yml for lines', start, end, 'of', oldYml, '------------is------', yml);
+        }
+      }
       try {
         const data = YAML.parse(yml);
         if (Array.isArray(data)) {
@@ -131,7 +142,7 @@ export default function Page({ params }: {params: {a: string, b: string}}) {
           setComparisons(sortBy(merged, 'feature'))
         }
       } catch (err) {
-        // console.error('error parsing yml:', err, yml);
+         // console.error('error parsing yml:', err, yml);
       }
     }
 
@@ -149,7 +160,7 @@ export default function Page({ params }: {params: {a: string, b: string}}) {
       }
     } while (!stop);
 
-    parseYml();
+    parseYml(true);
     setIsLoading(false);
     setLoaded(true);
   }, [a, b, setIsLoading, setLoaded])
