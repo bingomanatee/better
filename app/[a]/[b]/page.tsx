@@ -118,7 +118,7 @@ export default function Page({ params }: {params: {a: string, b: string}}) {
     }
     let yml = '';
 
-    function parseYml(final) {
+    function parseYml(final?: boolean) {
       if (final && !comparisons.length) {
         console.log('--- attempting to parse problematic content:', yml);
         let oldYml = yml;
