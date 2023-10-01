@@ -19,7 +19,12 @@ export async function POST(req: Request) {
     {
       role: ChatCompletionRequestMessageRoleEnum.User,
       content:  `compare "${a}" (designated "A") and "${b} designated B) ;
- return a JSON array of 3 features with properties "feature", "description" "a", "b", "value" (a number 1-10 indicating importance of feature) and "winner".  
+ return an array of 5 to 8 comparisons.
+ Each comparison should hve properties "feature", 
+ "description" 
+ "a", 
+ "b", 
+ "value" (a number 1-10 indicating importance of feature) and "winner".  
  description describe the meaning of the feature, and should be 1-2 medium sized sentences.
  Use the names "${a}" (for "A") and "${b}" (for B) in the text of the properties "a" and "b" of the response. 
  The value of the "winner" property should be  ("a", "b", or "draw")
