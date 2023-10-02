@@ -2,7 +2,7 @@
 
 import YAML from 'yaml'
 import Comparison from '~/lib/Comparison'
-import { sortBy, throttle } from 'lodash'
+import { sortBy, isEqual } from 'lodash'
 
 
 const decoder = new TextDecoder();
@@ -78,9 +78,11 @@ export async function* fetchGPTresponses(a: string, b: string) {
       break;
     } else {
       yml = `${yml}${decoder.decode(value)}`;
-      comparisons = parseYml(comparisons, yml, a, b);
-      console.log("FGR: yielding", comparisons);
-      yield comparisons
+      let next = parseYml(comparisons, yml, a, b);
+      if (!isEqual(next, comparisons)) {
+        comparisons = next;
+        yield comparisons
+      }
     }
 
   } while (!stop);
