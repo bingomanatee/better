@@ -4,8 +4,6 @@ import { CacheProvider } from '@chakra-ui/next-js'
 import { ChakraProvider } from '@chakra-ui/react'
 import { checkboxAnatomy } from '@chakra-ui/anatomy'
 
-const LAYER_STYLES = [];
-
 const COLORS = {
   accent: 'hsl(30,100%,50%)',
   'accent-dk': 'hsl(30,100%,33%)',
@@ -59,7 +57,28 @@ const CheckboxBaseStyle = definePartsStyle({
 export const checkboxTheme = defineMultiStyleConfig({ baseStyle: CheckboxBaseStyle })
 
 const theme = extendTheme({
+  layerStyles: {
+    'suggestion': {
+      minWidth: 80
+    },
+    'suggestion-item': {
+      minWidth: 36
+    }
+  },
   textStyles: {
+    'hint-a': {
+      color: 'a-won',
+      fontWeight: 'bold',
+      textAlign: 'right'
+    },
+    'hint-b': {
+      color: 'a-won',
+      fontWeight: 'bold',
+      textAlign: 'left'
+    },
+    'hint-sep' :{
+      color: 'blackAlpha.600',
+    },
     'overall': {
       color: 'whiteAlpha.700',
       fontSize: 'lg',
@@ -118,7 +137,7 @@ const theme = extendTheme({
         borderRadius: '0.333em',
         lineHeight: '100%',
         _hover: {
-          shadow: 'dark-lg'
+          shadow: 'md'
         }
       },
 

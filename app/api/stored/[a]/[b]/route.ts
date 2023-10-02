@@ -1,52 +1,35 @@
 import { kv } from '@vercel/kv';
 
 import { NextResponse } from 'next/server';
+import abRedisKey from '~/lib/abRedisKey'
 
-type RouteParams = { params: {a: string, b: string} }
+type RouteParams = { params: { a: string, b: string } }
 
 export async function PUT(req: Request, { params }: RouteParams) {
   const { a, b } = params
-  console.log('putting data:', a, b);
+  const key = abRedisKey(a, b);
+  console.log('putting data:', a, b, 'into', key);
   const data = await req.json();
 
   if (!(a && b && data)) {
     throw new Error('bad input');
   }
-  if (a < b) {
-    const response = await kv.set(`${a}\t${b}`.toLowerCase(), data);
-    return NextResponse.json({ response });
-  }
-  const response = await kv.set(`${b}\t${a}`.toLowerCase(), data);
+  const response = await kv.set(key, data);
   return NextResponse.json({ response });
 }
 
 export async function GET(req: Request, { params }: RouteParams) {
-  const { a, b } = params
-  if (!(a && b)) {
-    throw new Error('bad input');
-  }
-  if (a === b) {
-    throw new Error('same-same');
-  }
-  let comparisons;
+
   try {
-    if (a < b) {
-      comparisons = await kv.get(`${a}\t${b}`.toLowerCase());
-
-      console.log('cache retrieved:', comparisons);
-
-
-    } else {
-      comparisons = await kv.get(`${b}\t${a}`.toLowerCase());
-
+    const { a, b } = params;
+    const key = abRedisKey(a, b);
+    if (!(a && b)) {
+      throw new Error('bad input');
     }
-  } catch (err) {
-  }
-  if (!comparisons) {
-    return NextResponse.json({ result: 'not cached' });
-  }
-
-  try {
+    if (a === b) {
+      throw new Error('same-same');
+    }
+    let comparisons = await kv.get(key);
     return NextResponse.json({
       result: 'cached',
       comparisons
@@ -57,4 +40,24 @@ export async function GET(req: Request, { params }: RouteParams) {
       error: err instanceof Error ? err.message : 'unknown error'
     })
   }
+}
+
+
+export async function DELETE(req: Request, { params }: RouteParams) {
+  const { a, b } = params
+  const key = abRedisKey(a,b);
+  try {
+    const response = await kv.del(`${a}\t${b}`.toLowerCase());
+    return NextResponse.json({
+      result: 'deleted',
+      response
+    })
+  } catch (err) {
+    console.log('error deleting', a, b, err);
+    return NextResponse.json({
+      result: 'error',
+      error: err instanceof Error ? err.message : 'unknown error'
+    })
+  }
+
 }

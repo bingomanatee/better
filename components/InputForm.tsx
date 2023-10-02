@@ -3,6 +3,8 @@
 import { Box, Button, HStack, Input, InputGroup, InputLeftAddon, useBreakpointValue, VStack } from '@chakra-ui/react'
 import { ChangeEventHandler } from 'react'
 
+const NOOP = () => {}
+
 type Props = {
   isDisabled?: boolean,
   a: string,
@@ -16,7 +18,7 @@ type Props = {
 export default function InputForm({
                                     isDisabled,
                                     a, b,
-                                    action, aOnChange, bOnChange,
+                                    action, aOnChange = NOOP, bOnChange = NOOP,
                                     label = <span>Compare &rarr;</span>,
                                     buttonColor = "green"
                                   }: Props) {
@@ -31,7 +33,7 @@ export default function InputForm({
     },
   )
 
-  if (direction === 'vertical'){
+  if (direction === 'vertical') {
     return (
       <form action={action}>
         <VStack my={2} spacing={1}>

@@ -16,6 +16,7 @@ export default class Comparison {
   public b: string;
   public a: string;
   public winner: string
+  public old: boolean = false;
 
   constructor(data: ComparisonProps, public aName: string, public bName: string) {
     if (type.describe(data, true) !== TypeEnum.object) {
