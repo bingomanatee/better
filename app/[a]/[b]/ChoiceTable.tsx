@@ -139,7 +139,7 @@ export function ChoiceTable({ comparisons, a, b }: { comparisons: Comparison[], 
             description={comp.description}
             feature={comp.feature}
             old={comp.old}
-            value={0}/>
+            value={comp.value}/>
         ))
         }
       </Tbody>
