@@ -7,7 +7,6 @@ import { sortBy, isEqual } from 'lodash'
 
 const decoder = new TextDecoder();
 
-
 function parseYml(comparisons: Comparison[], yml: string, a: string, b: string, final?: boolean) {
   // this is the "DIGEST LOOP" in which data is streamed to the YML content
   try {
@@ -21,7 +20,6 @@ function parseYml(comparisons: Comparison[], yml: string, a: string, b: string, 
         // the data has "commentary" of ChatGPT surrounding the YML
         // saying why it can't parse your input...
 
-        console.log('--- attempting to parse problematic content:', yml);
         let lines = yml.split(/[\n\r]/g);
         let start = lines.findIndex((string) => /^```/.test(string));
         if (start > -1) {
@@ -44,17 +42,16 @@ function parseYml(comparisons: Comparison[], yml: string, a: string, b: string, 
       return sortBy(merged, 'feature');
     }
   } catch (err) {
-    console.error('error parsing yml:', err, yml);
+    // console.error('error parsing yml:', err, yml);
     // this will happen if the chat GPT is returning a result in which the YML is badly formed because it was
     // putting content line by line.
   }
 
 
-  return comparisons;
+  return sortBy(comparisons, 'feature');
 }
 
 export async function* fetchGPTresponses(a: string, b: string) {
-  console.log("START FGR: ", a, b);
   let body;
   const response = await fetch('/api/chat', { method: 'post', body: JSON.stringify({ a, b }) });
   body = response.body;
@@ -69,10 +66,8 @@ export async function* fetchGPTresponses(a: string, b: string) {
 
   let stop = false
   do {
-    console.log("FGR Reaading.....");
     const { done, value } = await reader.read();
     if (done) {
-      console.log('FGR: end of stream', value);
       stop = true
       break;
     } else {
@@ -90,6 +85,5 @@ export async function* fetchGPTresponses(a: string, b: string) {
     yield parseYml(comparisons, yml, a, b, true);
   }
 
-  console.log("FGR: done");
   return comparisons;
 }
