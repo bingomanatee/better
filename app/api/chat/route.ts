@@ -28,7 +28,7 @@ export async function POST(req: Request) {
  description describe the meaning of the feature, and should be 1-2 medium sized sentences.
  Use the names "${a}" (for "A") and "${b}" (for B) in the text of the properties "a" and "b" of the response. 
  The value of the "winner" property should be  ("a", "b", or "draw")
- Return the 5 most high value differences.
+ Return at most 8 features preferring those with higher values.
  Only return the YML - Act as a computer software: give me only the requested output, no conversation. use the '-' notation for each item
  If you cannot compare the thing return a single comparison with the feature "incomparable" and description "cannot be compared" 
  `
