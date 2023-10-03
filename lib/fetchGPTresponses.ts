@@ -9,31 +9,30 @@ const decoder = new TextDecoder();
 
 
 function parseYml(comparisons: Comparison[], yml: string, a: string, b: string, final?: boolean) {
-
-  if (final) {
-    // at this point all the data is read and we have no data;
-    // this happens when ChatGPT returns bad data: usually this means
-    // the data has "commentary" of ChatGPT surrounding the YML
-    // saying why it can't parse your input...
-
-    console.log('--- attempting to parse problematic content:', yml);
-    let lines = yml.split(/[\n\r]/g);
-    let start = lines.findIndex((string) => /^```/.test(string));
-    if (start > -1) {
-      const end = lines.slice(start + 1).findIndex((string) => /```$/.test(string)) + start;
-      yml = lines.slice(start + 1, end + 1).join("\n");
-    }
-  }
-
   // this is the "DIGEST LOOP" in which data is streamed to the YML content
   try {
     let data;
     try {
       data = YAML.parse(yml);
     } catch (err) {
-      // may be a "partial" chunk - delete last line
-      let partYaml = yml.replace(/\n[^\n]+$/, '');
-      data = YAML.parse(partYaml);
+      if (final) {
+        // at this point all the data is read and we cannot read the data;
+        // this happens when ChatGPT returns bad data: usually this means
+        // the data has "commentary" of ChatGPT surrounding the YML
+        // saying why it can't parse your input...
+
+        console.log('--- attempting to parse problematic content:', yml);
+        let lines = yml.split(/[\n\r]/g);
+        let start = lines.findIndex((string) => /^```/.test(string));
+        if (start > -1) {
+          const end = lines.slice(start + 1).findIndex((string) => /```$/.test(string)) + start;
+          yml = lines.slice(start + 1, end + 1).join("\n");
+        }
+      } else {
+        // may be a "partial" chunk - delete last line
+        let partYaml = yml.replace(/\n[^\n]+$/, '');
+        data = YAML.parse(partYaml);
+      }
     }
     if (Array.isArray(data)) {
       const newComparisons = data.map(item => new Comparison(item, a, b));
