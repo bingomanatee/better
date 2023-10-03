@@ -28,9 +28,9 @@ function parseYml(comparisons: Comparison[], yml: string, a: string, b: string, 
         }
       } else {
         // may be a "partial" chunk - delete last line
-        let partYaml = yml.replace(/\n[^\n]+$/, '');
-        data = YAML.parse(partYaml);
+        yml = yml.replace(/\n[^\n]+$/, '');
       }
+      data = YAML.parse(yml);
     }
     if (Array.isArray(data)) {
       const newComparisons = data.map(item => new Comparison(item, a, b));
@@ -45,6 +45,7 @@ function parseYml(comparisons: Comparison[], yml: string, a: string, b: string, 
     // console.error('error parsing yml:', err, yml);
     // this will happen if the chat GPT is returning a result in which the YML is badly formed because it was
     // putting content line by line.
+    // return the comparisons from the last pass
   }
 
 
